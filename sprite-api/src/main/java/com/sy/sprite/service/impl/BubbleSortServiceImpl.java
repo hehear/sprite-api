@@ -64,7 +64,7 @@ public class BubbleSortServiceImpl implements IBubbleSortService {
                     SortUtil.exch(arrays,j,j-1);
 
                     //交换后参数赋值
-                    bubble = getAfterBubbleSortResult(bubble,arrays,allStep,realStep);
+                    bubble = getAfterBubbleSortResult(bubble,arrays);
 
                     resultList.add(bubble);
 
@@ -76,7 +76,7 @@ public class BubbleSortServiceImpl implements IBubbleSortService {
                     flag = false;
                 }else{
                     //不交换
-                    BubbleSortResult bubble = getNoChangeBubbleSortResult(arrays,allStep,realStep,j,j-1);
+                    BubbleSortResult bubble = getNoChangeBubbleSortResult(arrays,j,j-1);
 
                     resultList.add(bubble);
                 }
@@ -98,13 +98,9 @@ public class BubbleSortServiceImpl implements IBubbleSortService {
     /**
      * 不交换结果封装
      * @param arrays
-     * @param integer
-     * @param step
-     * @param allStep
-     * @param realStep
      * @return
      */
-    private BubbleSortResult getNoChangeBubbleSortResult(Comparable[] arrays, Integer allStep, Integer realStep,Integer j, Integer i) {
+    private BubbleSortResult getNoChangeBubbleSortResult(Comparable[] arrays,Integer j, Integer i) {
 
         //拷贝数组
         Comparable[] resultArrays = arrays.clone();
@@ -120,13 +116,11 @@ public class BubbleSortServiceImpl implements IBubbleSortService {
         //实际排序步骤，没交换，真实排序步骤不加1
         bubble.setRealStep(realStep);
         //比较数1
-        Map<Integer,Comparable> compareMap1 = new HashMap<>();
-        compareMap1.put(j,resultArrays[j]);
-        bubble.setCompareNum1(compareMap1);
+        bubble.setCompareNum1Index(j);
+        bubble.setCompareNum1(resultArrays[j]);
         //比较数2
-        Map<Integer,Comparable> compareMap2 = new HashMap<>();
-        compareMap2.put(i,resultArrays[i]);
-        bubble.setCompareNum2(compareMap2);
+        bubble.setCompareNum2Index(i);
+        bubble.setCompareNum2(resultArrays[i]);
         //比较规则
         bubble.setCompareRule("asc");
         //是否交换
@@ -152,23 +146,19 @@ public class BubbleSortServiceImpl implements IBubbleSortService {
         //排序前的数组
         bubble.setBeforeArrays(resultArrays);
         //比较数1
-        Map<Integer,Comparable> compareMap1 = new HashMap<>();
-        compareMap1.put(j,resultArrays[j]);
-        bubble.setCompareNum1(compareMap1);
+        bubble.setCompareNum1Index(j);
+        bubble.setCompareNum1(resultArrays[j]);
         //比较数2
-        Map<Integer,Comparable> compareMap2 = new HashMap<>();
-        compareMap2.put(i,resultArrays[i]);
-        bubble.setCompareNum2(compareMap2);
+        bubble.setCompareNum2Index(i);
+        bubble.setCompareNum2(resultArrays[i]);
         //比较规则
         bubble.setCompareRule("asc");
         //交换数1
-        Map<Integer,Comparable> map1 = new HashMap<>();
-        map1.put(j,resultArrays[j]);
-        bubble.setExchangeNum1(map1);
+        bubble.setExchangeNum1Index(j);
+        bubble.setExchangeNum1(resultArrays[j]);
         //交换数2
-        Map<Integer,Comparable> map2 = new HashMap<>();
-        map2.put(i,resultArrays[i]);
-        bubble.setExchangeNum2(map2);
+        bubble.setExchangeNum2Index(i);
+        bubble.setExchangeNum2(resultArrays[i]);
         //是否交换
         bubble.setIsChanged("1");
 
@@ -180,13 +170,9 @@ public class BubbleSortServiceImpl implements IBubbleSortService {
      * 交换后的排序结果赋值
      * @param bubble
      * @param arrays
-     * @param j
-     * @param i
-     * @param allStep
-     * @param realStep
      * @return
      */
-    private BubbleSortResult getAfterBubbleSortResult(BubbleSortResult bubble, Comparable[] arrays, Integer allStep, Integer realStep) {
+    private BubbleSortResult getAfterBubbleSortResult(BubbleSortResult bubble, Comparable[] arrays) {
 
         //拷贝数组
         Comparable[] resultArrays = arrays.clone();
