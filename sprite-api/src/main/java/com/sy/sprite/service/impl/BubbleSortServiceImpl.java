@@ -42,6 +42,9 @@ public class BubbleSortServiceImpl implements IBubbleSortService {
         //将数组随机打乱
         //StdRandom.shuffle(arrays);
 
+        allStep = 0;
+        realStep = 0;
+
         List<BubbleSortResult> resultList  = new ArrayList<>();
 
         //打印数组
