@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>排序算法-冒泡排序 | hehear</title>
+
+    <!--seo-->
+    <meta name="keywords" content="Java实现 算法 排序算法 算法图形化">
+
+    <meta name="description" content="排序算法-冒泡排序，java实现冒泡排序，算法图形化图解排序步骤。">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- meta -->
+
+
+    <!-- link -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+
+    <link rel="shortcut icon" type="image/x-icon" href="/img/logo.ico">
+
+
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/spritejs.min.js"></script>
+    <script src="/js/sprite.js"></script>
+    <script src="/js/vue.js"></script>
+
+
+    <script>
+        function setLoadingBarProgress(num) {
+            document.getElementById('loading-bar').style.width = num + "%";
+        }
+    </script>
+
+
+</head>
+
+<body>
+
+
+<div class="cover-wrapper">
+
+    <!--封面 strt-->
+    <cover class="cover post half">
+
+
+        <h1 class="title">hehear</h1>
+
+        <!--搜索导航-->
+        <div class="m_search">
+            <form name="searchform" class="form u-search-form">
+                <input type="text" class="input u-search-input" placeholder>
+                <i class="icon fas fa-search fa-fw"></i>
+            </form>
+        </div>
+
+        <!--菜单导航 strt-->
+        <div class="menu navgation">
+            <ul class="h-list">
+
+
+                <li>
+                    <a class="nav home" href="#" id="home">
+                        <i class="fas fa-rss fa-fw"></i>&nbsp;博文
+                    </a>
+                </li>
+
+
+                <li>
+                    <a class="nav home" href="#" rel="nofollow" >
+                        <i class="fas fa-tree fa-fw"></i>&nbsp;wiki
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav home" href="#" id="archives">
+                        <i class="fas fa-archive fa-fw"></i>&nbsp;归档
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav home" href="#" rel="nofollow" id="history">
+                        <i class="fas fa-history fa-fw"></i>&nbsp;版本
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav home" href="#" rel="nofollow" id="about">
+                        <i class="fas fa-info-circle fa-fw"></i>&nbsp;关于
+                    </a>
+                </li>
+
+
+            </ul>
+        </div>
+        <!--菜单导航 end-->
+
+
+    </cover>
+    <!--封面 end-->
+
+    <!--头部导航菜单 strt-->
+    <header class="l_header pure">
+        <div id="loading-bar-wrapper">
+            <div id="loading-bar" class="pure"></div>
+        </div>
+
+        <div class="wrapper">
+            <div class="nav-main container container--flex">
+                <a class="logo flat-box" href="#">
+
+                    hehear
+
+                </a>
+                <div class="menu navgation">
+                    <ul class="h-list">
+
+
+                        <li>
+                            <a class="nav flat-box" href="#" id="home">
+                                <i class="fas fa-home fa-fw"></i>&nbsp;HOME
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="nav flat-box" href="#" rel="nofollow" id="categories">
+                                <i class="fas fa-folder-open fa-fw"></i>&nbsp;分类
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="nav flat-box" href="#" rel="nofollow" id="tags">
+                                <i class="fas fa-hashtag fa-fw"></i>&nbsp;标签
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="nav flat-box" href="#" rel="nofollow" id="archives">
+                                <i class="fas fa-archive fa-fw"></i>&nbsp;归档
+                            </a>
+                        </li>
+
+
+                    </ul>
+                </div>
+
+
+                <div class="m_search">
+                    <form name="searchform" class="form u-search-form">
+                        <input type="text" class="input u-search-input" placeholder="搜索">
+                        <i class="icon fas fa-search fa-fw"></i>
+                    </form>
+                </div>
+
+                <ul class="switcher h-list">
+
+                    <li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+
+                    <li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+                </ul>
+            </div>
+
+            <div class="nav-sub container container--flex">
+                <a class="logo flat-box"></a>
+                <ul class="switcher h-list">
+                    <li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a>
+                    </li>
+
+                    <li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+
+                </ul>
+            </div>
+        </div>
+    </header>
+    <!--头部导航菜单 end-->
+
+    <!--手机菜单 strt-->
+    <aside class="menu-phone">
+        <header>
+            <nav class="menu navgation">
+                <ul>
+
+
+                    <li>
+                        <a class="nav flat-box" href="#" id="home">
+                            <i class="fas fa-home fa-fw"></i>&nbsp;HOME
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="nav flat-box" href="#" rel="nofollow" id="archives">
+                            <i class="fas fa-archive fa-fw"></i>&nbsp;文章归档
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="nav flat-box" href="#" id="history">
+                            <i class="fas fa-history fa-fw"></i>&nbsp;版本
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="nav flat-box" href="#" rel="nofollow" id="friends">
+                            <i class="fas fa-link fa-fw"></i>&nbsp;我的友链
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="nav flat-box" href="#" rel="nofollow" id="#">
+                            <i class="fas fa-book fa-fw"></i>&nbsp;wiki
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="nav flat-box" href="#" rel="nofollow" id="about">
+                            <i class="fas fa-info-circle fa-fw"></i>&nbsp;关于小站
+                        </a>
+                    </li>
+
+
+                </ul>
+            </nav>
+        </header>
+    </aside>
+    <!--手机菜单 end-->
+    <script>
+        setLoadingBarProgress(40);
+    </script>
+
+</div>
+
+
+<div class="l_body">
+    <div class='body-wrapper'>
+        <div class="l_main">
+
+
+            <article id="post" class="post white-box article-type-post" itemscope itemprop="blogPost">
+
+
+                <section class="meta">
+
+
+                    <div class="meta" id="header-meta">
+
+
+                        <h1 class="title">
+                            <a href="#">
+                                排序算法-冒泡排序
+                            </a>
+                        </h1>
+
+
+                        <div class="new-meta-box">
+
+
+                            <div class="new-meta-item author">
+                                <a href="#" rel="nofollow">
+
+                                    <img src="/img/avatar.png">
+
+                                    <p>cola</p>
+                                </a>
+                            </div>
+
+
+                            <div class="new-meta-item date">
+                                <a class="notlink">
+                                    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                                    <p>2019-12-30</p>
+                                </a>
+                            </div>
+
+
+                            <div class="new-meta-item category">
+                                <a href="#" rel="nofollow">
+                                    <i class="fas fa-folder-open" aria-hidden="true"></i>
+                                    <p>算法</p>
+                                </a>
+                            </div>
+
+
+                            <div class="new-meta-item browse busuanzi">
+                                <a class="notlink">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                    <p>
+                                            <span id="busuanzi_value_page_pv">
+                                                <i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i>
+                                            </span>
+                                    </p>
+                                </a>
+                            </div>
+
+
+                        </div>
+
+                        <hr>
+
+                    </div>
+                </section>
+
+
+                <section class="article typo">
+                    <div class="article-entry" itemprop="articleBody" id="content">
+
+                        <h3 id="排序思想"><a href="#排序思想" class="headerlink" title="排序思想"></a>排序思想</h3><p>相邻的两个数比较，大的沉下去（交换到右边），小的冒上来（交换到左边）</p>
+                        <h3 id="算法图形化"><a href="#算法图形化" class="headerlink" title="算法图形化"></a>算法图形化</h3>
+                        <div id="app" class="post-body post-content   editormd-container  article-body content editormd-preview-container paper-body">
+                            <p>测试数据：${arr}</p>
+                            <div class="text-right">
+
+                                <input type="button" class="btn btn-success" value="随机生成测试数据" @click="getRandomArr"/>
+                                <input type="button" class="btn btn-primary" value="自动排序"  @click="autoSort"/>
+                                <input type="button" class="btn btn-primary" value="手动排序"  @click="manualySort"/>
+                                <input type="button" class="btn btn-primary" value="跳到最初" id="startStatus" style="display:none" @click="startStatusSort"/>
+                                <input type="button" class="btn btn-primary" value="下一步" id="nextStep" style="display:none" @click="nextStepSort"/>
+                                <input type="button" class="btn btn-primary" value="上一步" id="lastStep" style="display:none" @click="lastStepSort"/>
+                                <input type="button" class="btn btn-primary" value="跳到最后" id="endStatus" style="display:none" @click="endStatusSort"/>
+
+
+                            </div>
+                            <div id="my-scene" style="height: 300px;background-color:#f6f6f6;margin-top:30px;"></div>
+                        </div>
+
+                        <h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>排序代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 冒泡排序算法：</span></span><br><span class="line"><span class="comment"> * 1.相邻的两个数比较，大的沉下去（交换到右边），小的冒上来（交换到左边）</span></span><br><span class="line"><span class="comment"> * 2.第一次将数组所有相邻的元素比较完，即将最小的元素移到最左边，第二次将剩下的最小元素移到数组第二的位置</span></span><br><span class="line"><span class="comment"> * 3.依次类推，就将所有元素的位置排序好了</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(Comparable[] arrays)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//将数组随机打乱</span></span><br><span class="line">    <span class="comment">//StdRandom.shuffle(arrays);</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//打印数组</span></span><br><span class="line">    SortUtil.show(arrays);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> arrLength = arrays.length;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arrLength-<span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 设定一个标记，若为true，则表示此次循环没有进行交换，也就是待排序列已经有序，排序已经完成。</span></span><br><span class="line">        <span class="keyword">boolean</span> flag = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = arrLength - <span class="number">1</span>; j &gt; i ; j--) &#123;</span><br><span class="line">            <span class="comment">//相邻两个数比较，后面的数 &lt; 前面的数</span></span><br><span class="line">            <span class="keyword">if</span> (SortUtil.less(arrays[j], arrays[j-<span class="number">1</span>])) &#123;</span><br><span class="line">                <span class="comment">//交换</span></span><br><span class="line">                SortUtil.exch(arrays,j,j-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//打印数组</span></span><br><span class="line">                SortUtil.show(arrays);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//变动标识置为false</span></span><br><span class="line">                flag = <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//无变动，则已排好序，可退出遍历</span></span><br><span class="line">        <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//验证是否有序</span></span><br><span class="line">    <span class="keyword">assert</span> SortUtil.isSorted(arrays);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+                        <p>工具类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span> 排序工具类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> dxy</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-12-11</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SortUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 元素比较</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var0</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var1</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> var0&lt;var1 则返回true</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">less</span><span class="params">(Comparable var0, Comparable var1)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> var0.compareTo(var1) &lt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">less</span><span class="params">(Object v, Object w, Comparator comparator)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> comparator.compare(v, w) &lt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 元素比较</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var0</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var1</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var2</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">less</span><span class="params">(Comparable[] var0, <span class="keyword">int</span> var1, <span class="keyword">int</span> var2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> var0[var1 - <span class="number">1</span>].compareTo(var0[var2 - <span class="number">1</span>]) &lt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 元素交换</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var0 数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var1 下标1</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var2 下标2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exch</span><span class="params">(Object[] var0, <span class="keyword">int</span> var1, <span class="keyword">int</span> var2)</span> </span>&#123;</span><br><span class="line">        Object var3 = var0[var1];</span><br><span class="line">        var0[var1] = var0[var2];</span><br><span class="line">        var0[var2] = var3;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数组是否有序</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var0</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isSorted</span><span class="params">(Comparable[] var0)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> isSorted(var0, <span class="number">0</span>, var0.length - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isHsorted</span><span class="params">(Comparable[] var0, <span class="keyword">int</span> var1)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> var2 = var1; var2 &lt; var0.length; ++var2) &#123;</span><br><span class="line">            <span class="keyword">if</span> (less(var0[var2], var0[var2 - var1])) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 判断数组中元素1到元素2是否有序</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var0 数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var1 元素1</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var2 元素2</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isSorted</span><span class="params">(Comparable[] var0, <span class="keyword">int</span> var1, <span class="keyword">int</span> var2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> var3 = var1 + <span class="number">1</span>; var3 &lt;= var2; ++var3) &#123;</span><br><span class="line">            <span class="keyword">if</span> (less(var0[var3], var0[var3 - <span class="number">1</span>])) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 遍历打印数组换行</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var0</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">showLn</span><span class="params">(Comparable[] var0)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> var1 = <span class="number">0</span>; var1 &lt; var0.length; ++var1) &#123;</span><br><span class="line">            System.out.println(var0[var1]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 遍历打印数组不换行</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> var0</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Comparable[] var0)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> var1 = <span class="number">0</span>; var1 &lt; var0.length; ++var1) &#123;</span><br><span class="line">            System.out.print(var0[var1]+<span class="string">"  "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+                    </div>
+
+
+                    <section class="meta" id="footer-meta">
+                        <hr>
+                        <div class="new-meta-box">
+
+
+                            <div class="new-meta-item date" itemprop="dateUpdated"
+                                 datetime="2019-05-22T10:42:54+08:00">
+                                <a class="notlink">
+                                    <i class="fas fa-clock" aria-hidden="true"></i>
+                                    <p>最后更新于 2019-12-30</p>
+                                </a>
+                            </div>
+
+
+                            <div class="new-meta-item meta-tags"><a class="tag" href="#"
+                                                                    rel="nofollow"><i class="fas fa-hashtag" aria-hidden="true"></i>&nbsp;<p>算法
+                            </p></a>
+                            </div>
+
+                            <div class="new-meta-item meta-tags"><a class="tag" href="#"
+                                                                    rel="nofollow"><i class="fas fa-hashtag" aria-hidden="true"></i>&nbsp;<p>排序算法
+                            </p></a>
+                            </div>
+
+
+                            <!--分享 strt-->
+                            <div class="new-meta-item share -mob-share-list">
+                                <div class="-mob-share-list share-body">
+
+
+                                    <a class="-mob-share-qq" title="QQ好友"
+                                       rel="external nofollow noopener noreferrer"
+                                       href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.runningcoder.top/2019/05/17/blog1/&title=docker分离部署springboot并外置静态文件 | RunningCoder&pics=/img/avatar.png&summary=打包springbootdocker部署springboot项目时，每次上传war/jar包耗时耗力，并且每次都要修改配置文件，所以用docker部署时，将springboot项目打包时将项目的代码、静态文件、配置文件、lib分离，每次升级只需上传修改的代码即可，同时将静态文件等外挂到服务器，修改时只需修改完重启容器应用即可，无需重新build镜像。">
+
+                                        <img src="https://cdn.jsdelivr.net/gh/xaoxuu/assets@19.1.9/logo/128/qq.png">
+
+                                    </a>
+
+
+                                    <a class="-mob-share-qzone" title="QQ空间"
+                                       rel="external nofollow noopener noreferrer"
+                                       href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://hehear.com/2019/05/17/blog1/&title=docker分离部署springboot并外置静态文件 | RunningCoder&pics=/img/avatar.png&summary=打包springbootdocker部署springboot项目时，每次上传war/jar包耗时耗力，并且每次都要修改配置文件，所以用docker部署时，将springboot项目打包时将项目的代码、静态文件、配置文件、lib分离，每次升级只需上传修改的代码即可，同时将静态文件等外挂到服务器，修改时只需修改完重启容器应用即可，无需重新build镜像。">
+
+                                        <img
+                                                src="https://cdn.jsdelivr.net/gh/xaoxuu/assets@19.1.9/logo/128/qzone.png">
+
+                                    </a>
+
+
+                                    <a class="-mob-share-wechat" title="微信"
+                                       rel="external nofollow noopener noreferrer">
+
+                                        <img
+                                                src="https://cdn.jsdelivr.net/gh/xaoxuu/assets@19.1.9/logo/128/wechat.png">
+
+                                    </a>
+
+
+                                    <a class="-mob-share-weibo" title="微博"
+                                       rel="external nofollow noopener noreferrer"
+                                       href="http://service.weibo.com/share/share.php?url=http://blog.runningcoder.top/2019/05/17/blog1/&title=docker分离部署springboot并外置静态文件 | RunningCoder&pics=/img/avatar.png&summary=打包springbootdocker部署springboot项目时，每次上传war/jar包耗时耗力，并且每次都要修改配置文件，所以用docker部署时，将springboot项目打包时将项目的代码、静态文件、配置文件、lib分离，每次升级只需上传修改的代码即可，同时将静态文件等外挂到服务器，修改时只需修改完重启容器应用即可，无需重新build镜像。">
+
+                                        <img
+                                                src="https://cdn.jsdelivr.net/gh/xaoxuu/assets@19.1.9/logo/128/weibo.png">
+
+                                    </a>
+
+
+                                </div>
+                            </div>
+                            <!--分享 end-->
+
+                        </div>
+                    </section>
+
+                    <!--上下篇文章 start-->
+                    <div class="prev-next">
+
+                        <section class="prev"><span class="art-item-left">
+                                    <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一篇</h6>
+                                    <h4><a href="#" rel="prev" title="JVM系列-JVM初识">JVM系列-JVM初识</a></h4>
+
+                                </span></section>
+
+
+                    </div>
+                    <!--上下篇文章 end-->
+
+                </section>
+            </article>
+
+
+            <!-- 显示推荐文章和评论 -->
+
+
+            <article class="post white-box comments">
+                <section class="article typo">
+                    <h4><i class="fas fa-comments fa-fw" aria-hidden="true"></i>&nbsp;评论</h4>
+
+
+                    <section id="comments">
+                        <div id="valine_container" class="valine_thread">
+                            <i class="fas fa-spinner fa-spin fa-fw"></i>
+                        </div>
+                    </section>
+
+                </section>
+            </article>
+
+
+            <!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+            <script>
+                window.subData = {
+                    title: "排序算法-冒泡排序",
+                    tools: true
+                }
+            </script>
+
+
+        </div>
+        <aside class="l_side">
+
+            <!--底部导航图标 strt-->
+            <section class="widget author">
+                <div class="content pure">
+
+                    <div class="avatar">
+                        <img class="avatar" src="/img/hear.png" style="width: 80%;height: 50%;">
+                    </div>
+
+
+                    <div class="social-wrapper">
+
+
+                        <a href="#" class="social fas fa-rss flat-btn" target="_blank"
+                           rel="external nofollow noopener noreferrer">
+                        </a>
+
+
+                        <a href="#" class="social fas fa-envelope flat-btn" target="_blank"
+                           rel="external nofollow noopener noreferrer">
+                        </a>
+
+
+                        <a href="#" class="social fab fa-github flat-btn" target="_blank"
+                           rel="external nofollow noopener noreferrer">
+                        </a>
+
+
+                        <a href="#"
+                           class="social fas fa-headphones-alt flat-btn" target="_blank"
+                           rel="external nofollow noopener noreferrer">
+                        </a>
+
+
+                    </div>
+
+                </div>
+            </section>
+            <!--底部导航图标 end-->
+
+            <!--目录导航 strt-->
+            <section class="widget toc-wrapper">
+
+                <header class="pure">
+                    <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;本文目录</div>
+
+                    <div class="wrapper"><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer"
+                                            href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div>
+
+                </header>
+
+                <div class="content pure" id="menu">
+
+                </div>
+
+
+            </section>
+            <!--目录导航 end-->
+
+        </aside>
+
+        <!--底部-->
+        <!--尾部部分 -->
+
+        <!--footer -->
+        <footer id="footer" class="clearfix">
+
+
+            <div class="social-wrapper">
+
+
+                <a href="#" class="social fas fa-rss flat-btn" target="_blank"
+                   rel="external nofollow noopener noreferrer">
+                </a>
+
+
+                <a href="#" class="social fas fa-envelope flat-btn" target="_blank"
+                   rel="external nofollow noopener noreferrer">
+                </a>
+
+
+                <a href="#" class="social fab fa-github flat-btn" target="_blank"
+                   rel="external nofollow noopener noreferrer">
+                </a>
+
+
+                <a href="#" class="social fas fa-headphones-alt flat-btn"
+                   target="_blank" rel="external nofollow noopener noreferrer">
+                </a>
+
+
+            </div>
+
+            <br>
+            <div><p>@2019 | 总访问量为
+                <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span>
+                次</p>
+            </div>
+            <div>
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=23022502000013" target="_blank">
+                    <img style=" width: 20px;margin: 5px 0px -5px 5px;" src="//img.alicdn.com/tfs/TB1..50QpXXXXX7XpXXXXXXXXXX-40-40.png">
+                    <span style="height:20px;line-height:20px; color:#939393;">黑公网安备 23022502000013号</span>
+                </a>
+            </div>
+        </footer>
+
+
+        <script>
+            setLoadingBarProgress(80);
+        </script>
+
+
+        <script>
+            setLoadingBarProgress(60);
+        </script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+
+<script>
+    setLoadingBarProgress(20);
+</script>
+
+<script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hehear" || "hehear";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+</script>
+
+<script src="//instant.page/1.2.2" type="module"
+        integrity="sha384-2xV8M5griQmzyiY3CDqh1dn4z3llDVqZDqzjzcY+jCBCk/a5fXJmuZ/40JJAPeoU"></script>
+
+<script src="/js/scrollreveal.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        const $reveal = $('.reveal');
+        if ($reveal.length === 0) return;
+        const sr = ScrollReveal({
+            distance: 0
+        });
+        sr.reveal('.reveal');
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+    });
+</script>
+
+<script async src="/js/busuanzi.pure.mini.js"></script>
+<script src="/js/jquery.backstretch.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        if ('.cover') {
+            $('.cover').backstretch(
+                ["/img/background.jpg"], {
+                    duration: "6000",
+                    fade: "2500"
+                });
+        } else {
+            $.backstretch(
+                ["/img/background.jpg"], {
+                    duration: "6000",
+                    fade: "2500"
+                });
+        }
+    });
+</script>
+
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/volantis@1/js/volantis.min.js"></script>
+
+
+<script>
+    var GUEST_INFO = ['nick', 'mail', 'link'];
+    var guest_info = 'nick,mail,link'.split(',').filter(function (item) {
+        return GUEST_INFO.indexOf(item) > -1
+    });
+    var notify = 'false' == true;
+    var verify = 'false' == true;
+    var valine = new Valine();
+    valine.init({
+        el: '#valine_container',
+        notify: notify,
+        verify: verify,
+        guest_info: guest_info,
+
+        appId: "wcW7qLiXU8LXBEA9FB7cvKWf-gzGzoHsz",
+        appKey: "KfLYrkLqc1wB0Iq0GWCBqN51",
+        placeholder: "快来评论吧~",
+        pageSize: '10',
+        avatar: 'mp',
+        lang: 'zh-cn',
+        highlight: 'false'
+    })
+</script>
+
+<script src="/js/app.js"></script>
+
+<script src="/js/search.js"></script>
+
+<!-- 复制 -->
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+    let COPY_SUCCESS = "复制成功";
+    let COPY_FAILURE = "复制失败";
+    /*页面载入完成后，创建复制按钮*/
+    ! function (e, t, a) {
+        /* code */
+        var initCopyCode = function () {
+            var copyHtml = '';
+            copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+            copyHtml += '  <i class="fa fa-copy"></i><span>复制</span>';
+            copyHtml += '</button>';
+            $(".highlight .code pre").before(copyHtml);
+            var clipboard = new ClipboardJS('.btn-copy', {
+                target: function (trigger) {
+                    return trigger.nextElementSibling;
+                }
+            });
+
+            clipboard.on('success', function (e) {
+                //您可以加入成功提示
+                console.info('Action:', e.action);
+                console.info('Text:', e.text);
+                console.info('Trigger:', e.trigger);
+                success_prompt(COPY_SUCCESS);
+                e.clearSelection();
+            });
+            clipboard.on('error', function (e) {
+                //您可以加入失败提示
+                console.error('Action:', e.action);
+                console.error('Trigger:', e.trigger);
+                fail_prompt(COPY_FAILURE);
+            });
+        }
+        initCopyCode();
+
+    }(window, document);
+
+    /**
+     * 弹出式提示框，默认1.5秒自动消失
+     * @param message 提示信息
+     * @param style 提示样式，有alert-success、alert-danger、alert-warning、alert-info
+     * @param time 消失时间
+     */
+    var prompt = function (message, style, time) {
+        style = (style === undefined) ? 'alert-success' : style;
+        time = (time === undefined) ? 1500 : time * 1000;
+        $('<div>')
+            .appendTo('body')
+            .addClass('alert ' + style)
+            .html(message)
+            .show()
+            .delay(time)
+            .fadeOut();
+    };
+
+    // 成功提示
+    var success_prompt = function (message, time) {
+        prompt(message, 'alert-success', time);
+    };
+
+    // 失败提示
+    var fail_prompt = function (message, time) {
+        prompt(message, 'alert-danger', time);
+    };
+
+    // 提醒
+    var warning_prompt = function (message, time) {
+        prompt(message, 'alert-warning', time);
+    };
+
+    // 信息提示
+    var info_prompt = function (message, time) {
+        prompt(message, 'alert-info', time);
+    };
+</script>
+
+<!--目录-->
+
+<script>
+    $(function () {
+        var padding=[0,0,0,10,30,40,50,60,70];
+        var lastIndex=2;
+
+        var htmlContent="";
+
+        $("#content").find('h1,h2,h3,h4,h5,h6').each(function (index, element) {
+            var tagName = $(this).get(0).tagName;
+
+            var tagIndex=parseInt(tagName.charAt(1));
+
+
+            if (tagName.substr(0, 1).toUpperCase() == "H") {
+                var contentH = $(this).text(); //获取内容
+
+                var hrefContent=contentH.replace("              ","");
+                hrefContent=hrefContent.replace('. ','-');
+                hrefContent=hrefContent.replace(' ','');
+                hrefContent=hrefContent.replace('(','');
+                hrefContent=hrefContent.replace(')','');
+                hrefContent=hrefContent.replace(' ','-');
+                hrefContent=hrefContent.replace('.','-');
+
+                if(parseInt(tagIndex)>parseInt(lastIndex)){
+                    htmlContent+="<ol class=\"toc-child\">";
+                }
+                if(parseInt(tagIndex)<parseInt(lastIndex)){
+                    htmlContent+="</ol>  </li>";
+                }
+
+                if(parseInt(tagIndex)==parseInt(lastIndex)){
+                    htmlContent+="</li>";
+                }
+
+                htmlContent+="<li class=\"toc-item toc-level-"+tagIndex+"\"><a class=\"toc-link\" href=\"#"+hrefContent+"\"><span class=\"toc-text\">"+contentH+"</span></a>";
+
+
+                lastIndex=tagIndex;
+
+                //console.log("hrefContent:"+hrefContent);
+
+                //$("#menu").append("<a class=\"toc-link\" href='#" + hrefContent + "'  style=\"padding-left:"+padding[tagIndex]+"px; display:block;\">" + contentH + "</a>"); //在目标DIV中添加内容
+            }
+        });
+
+
+        $("#menu").append(htmlContent);
+
+    });
+</script>
+
+<script>
+    setLoadingBarProgress(100);
+</script>
+
+
+<!-- fancybox -->
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+    let LAZY_LOAD_IMAGE = "";
+    $(".article-entry").find("fancybox").find("img").each(function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "gallery");
+        $(element).attr("href", $(this).attr("src"));
+        /* 图片采用懒加载处理时,
+         * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+         * 那么此处将原本的属性名src替换为对应属性名data-original,
+         * 修改如下
+         */
+        if (LAZY_LOAD_IMAGE) {
+            $(element).attr("href", $(this).attr("data-original"));
+        }
+        $(this).wrap(element);
+    });
+</script>
+
+<script>
+
+    var vm = new Vue({
+        el: '#app',
+        delimiters: ['${', '}'],
+        data: {
+            arr: [2,4,6,10,1,5,8,9,3,3,14,12,9,6,13,7],
+            filter:{},
+            tip: "",
+            stepIndex:0,
+            sorting:0,
+            steps:{}
+        },
+        mounted(){
+            let arr = [2,4,6,10,1,5,8,9,3,3,14,12,9,6,13,7];
+            sy.createElements(arr);
+        },
+        methods: {
+
+            //获得随机的数组
+            getRandomArr: function () {
+                var newArr=[];
+                while(true){
+                    var tempNum=Math.ceil(Math.random()*15);
+                    if(tempNum){
+                        newArr.push(tempNum);
+                        if(newArr.length>15){
+                            break;
+                        }
+                    }
+                }
+                vm.arr=newArr;
+                //生成精灵
+                sy.createElements(newArr);
+            } ,
+            //自动排序
+            autoSort:function(){
+                //请求后台获取算法执行步骤信息
+                $.ajax({
+                    url: 'http://sprite.hehear.com/sprite/sort/bubble',
+                    //url:'http://localhost:8080/sprite/sort/bubble',
+                    type: 'post',
+                    headers:{'Content-Type': 'application/json'},
+                    data: JSON.stringify(vm.arr),
+                    success: function (result) {
+
+                        sy.attr.steps = result.record;
+                        sy.create(vm.arr);
+                    }
+                });
+                // sy.create(vm.arr);
+            },
+            // 手动排序
+            manualySort:function(){
+                //请求后台获取算法执行步骤信息
+                $.ajax({
+                    url: 'http://sprite.hehear.com/sprite/sort/bubble',
+                    //url:'http://localhost:8080/sprite/sort/bubble',
+                    type: 'post',
+                    headers:{'Content-Type': 'application/json'},
+                    data: JSON.stringify(vm.arr),
+                    success: function (result) {
+
+                        vm.steps = result.record;
+                        sy.attr.steps = result.record;
+                        sy.createElements(vm.arr);
+                        //显示上一步下一步按钮
+                        $("#lastStep").show();
+                        $("#nextStep").show();
+                        $("#startStatus").show();
+                        $("#endStatus").show();
+
+                    }
+                });
+            },
+            // 上一步排序
+            lastStepSort:function(){
+                // 步骤-1
+                vm.stepIndex = parseInt(vm.stepIndex)-1;
+                if(vm.stepIndex < 0){
+                    return false;
+                }
+                if(vm.sorting == 0){
+
+                    vm.sorting = 1;
+                    //步骤排序
+                    sy.stepSort(vm.stepIndex,function (status) {
+                        vm.sorting = status;
+                    });
+                }
+            },
+            // 下一步排序
+            nextStepSort:function(){
+
+                if(vm.stepIndex >= vm.steps.length){
+                    return false;
+                }
+                if(vm.sorting == 0){
+
+                    vm.sorting = 1;
+                    //步骤排序
+                    sy.stepSort(vm.stepIndex,function (status) {
+                        vm.sorting = status;
+                    });
+                }else{
+                    return false;
+                }
+                // 排序步骤+1
+                vm.stepIndex = parseInt(vm.stepIndex)+1;
+            },
+            // 开始状态
+            startStatusSort:function(){
+
+                vm.stepIndex = 0;
+                sy.createElements(vm.arr);
+            },
+            // 最后状态
+            endStatusSort:function(){
+
+                vm.stepIndex = vm.steps.length-1;
+                let arrays = vm.steps[vm.steps.length-1].afterArrays;
+                sy.createElements(arrays);
+            },
+
+
+
+        }
+    });
+</script>
+
+<script>
+    setLoadingBarProgress(100);
+</script>
+</body>
+
+</html>
