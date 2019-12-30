@@ -5,3 +5,5 @@
 ## sprite-node
 算法图形化的node端，根据api调用返回的数组，生成相应的图形。
 取自我博客的一篇文章，简单的node.js+express框架，作为算法图形化的demo框架。
+## 博客应用地址
+http://hehear.com/article/34.html
