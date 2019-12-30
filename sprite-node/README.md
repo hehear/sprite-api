@@ -1,5 +1,5 @@
-# blog
-- 博客源码及博客md源文件
-- 博客地址：http://hehear.com/
-- note:博客应用node.js做web容器，博客主题应用了hexo的material-x主题，只应用了页面以及样式，功能实现用了node.js
-- hexo官网：https://hexo.io/zh-cn/  
+# sprite-node
+- 来自hehear博客的排序系列文章
+- 博客地址：http://hehear.com/article-type-11.html
+- html应用页为：index.html
+- js:public/js/sprite.js
