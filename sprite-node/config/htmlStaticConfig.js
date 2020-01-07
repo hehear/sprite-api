@@ -3,7 +3,7 @@
  **/
 const config = {
     //是否开启静态化
-    enable:true,
+    enable:false,
     //静态文件存放目录
     bashPath:'/Users/runningcoder/git/sprite/sprite-node/html',
 };

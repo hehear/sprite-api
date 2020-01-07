@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/spritejs.min.js"></script>
-    <script src="/js/sprite_quicksort.js"></script>
+    <script src="/js/sprite.js"></script>
     <script src="/js/vue.js"></script>
 
 
@@ -316,13 +316,11 @@
                         <h3 id="排序思想"><a href="#排序思想" class="headerlink" title="排序思想"></a>排序思想</h3><p>相邻的两个数比较，大的沉下去（交换到右边），小的冒上来（交换到左边）</p>
                         <h3 id="算法图形化"><a href="#算法图形化" class="headerlink" title="算法图形化"></a>算法图形化</h3>
                         <div id="app" class="post-body post-content   editormd-container  article-body content editormd-preview-container paper-body">
-                            <p>测试数据：data[]=${arr}</p>
+                            <p>测试数据：${arr}</p>
                             <div class="text-right">
 
                                 <input type="button" class="btn btn-success" value="随机生成测试数据" @click="getRandomArr"/>
                                 <input type="button" class="btn btn-primary" value="自动排序"  @click="autoSort"/>
-                                <input type="button" class="btn btn-primary" value="暂停"  id="pauseSort" @click="pauseSort"/>
-                                <input type="button" class="btn btn-primary" value="继续"  id="continueSort" style="display:none" @click="continueSort"/>
                                 <input type="button" class="btn btn-primary" value="手动排序"  @click="manualySort"/>
                                 <input type="button" class="btn btn-primary" value="跳到最初" id="startStatus" style="display:none" @click="startStatusSort"/>
                                 <input type="button" class="btn btn-primary" value="下一步" id="nextStep" style="display:none" @click="nextStepSort"/>
@@ -331,11 +329,6 @@
 
 
                             </div>
-
-                            <div id="my-title" style="height: 100px;overflow-y: scroll;background-color:#f6f6f6;margin-top:30px;text-align: left">
-
-                            </div>
-
                             <div id="my-scene" style="height: 300px;background-color:#f6f6f6;margin-top:30px;"></div>
                         </div>
 
@@ -855,7 +848,6 @@
             arr: [2,4,6,10,1,5,8,9,3,3,14,12,9,6,13,7],
             filter:{},
             tip: "",
-            pause:0,
             stepIndex:0,
             sorting:0,
             steps:{}
@@ -879,70 +871,32 @@
                     }
                 }
                 vm.arr=newArr;
-                vm.stepIndex = 0;
                 //生成精灵
                 sy.createElements(newArr);
-
-                //隐藏上一步下一步按钮
-                $("#lastStep").hide();
-                $("#nextStep").hide();
-                $("#startStatus").hide();
-                $("#endStatus").hide();
-
-                //清空排序文字
-                $("#my-title").html("");
             } ,
             //自动排序
             autoSort:function(){
                 //请求后台获取算法执行步骤信息
                 $.ajax({
-                    //url: 'http://sprite.hehear.com/sprite/sort/bubble',
-                    url:'http://localhost:8080/sprite/sort/quick',
+                    url: 'http://sprite.hehear.com/sprite/sort/bubble',
+                    //url:'http://localhost:8080/sprite/sort/bubble',
                     type: 'post',
                     headers:{'Content-Type': 'application/json'},
                     data: JSON.stringify(vm.arr),
                     success: function (result) {
 
-                        vm.stepIndex = 0;
-                        vm.steps = result.record;
                         sy.attr.steps = result.record;
-                        sy.createElements(vm.arr);
-                        //清空排序文字
-                        $("#my-title").html("");
-
-                        vm.autoStepSort(vm.stepIndex)
-
-
-
-                        //sy.create(vm.arr);
+                        sy.create(vm.arr);
                     }
                 });
                 // sy.create(vm.arr);
-            },
-            autoStepSort:function(){
-
-                if(vm.pause!=0){
-                    return false;
-                }
-
-                if(vm.stepIndex<vm.steps.length){
-                    //步骤排序
-                    sy.stepSort(vm.stepIndex,function (status) {
-
-                        vm.sorting = status;
-
-                        vm.stepIndex = vm.stepIndex+1;
-                        vm.autoStepSort();
-                    });
-                }
-
             },
             // 手动排序
             manualySort:function(){
                 //请求后台获取算法执行步骤信息
                 $.ajax({
-                    //url: 'http://sprite.hehear.com/sprite/sort/bubble',
-                    url:'http://localhost:8080/sprite/sort/quick',
+                    url: 'http://sprite.hehear.com/sprite/sort/bubble',
+                    //url:'http://localhost:8080/sprite/sort/bubble',
                     type: 'post',
                     headers:{'Content-Type': 'application/json'},
                     data: JSON.stringify(vm.arr),
@@ -950,11 +904,7 @@
 
                         vm.steps = result.record;
                         sy.attr.steps = result.record;
-                        vm.stepIndex = 0;
                         sy.createElements(vm.arr);
-                        //清空排序文字
-                        $("#my-title").html("");
-
                         //显示上一步下一步按钮
                         $("#lastStep").show();
                         $("#nextStep").show();
@@ -983,9 +933,9 @@
             // 下一步排序
             nextStepSort:function(){
 
-                // if(vm.stepIndex >= vm.steps.length){
-                //     return false;
-                // }
+                if(vm.stepIndex >= vm.steps.length){
+                    return false;
+                }
                 if(vm.sorting == 0){
 
                     vm.sorting = 1;
@@ -998,7 +948,6 @@
                 }
                 // 排序步骤+1
                 vm.stepIndex = parseInt(vm.stepIndex)+1;
-
             },
             // 开始状态
             startStatusSort:function(){
@@ -1012,36 +961,6 @@
                 vm.stepIndex = vm.steps.length-1;
                 let arrays = vm.steps[vm.steps.length-1].afterArrays;
                 sy.createElements(arrays);
-            },
-            // 暂停
-            pauseSort:function(){
-
-                vm.pause=1;
-
-                //隐藏按钮显示继续
-                $("#pauseSort").hide();
-                $("#continueSort").show();
-
-                //显示上一步下一步按钮
-                $("#lastStep").show();
-                $("#nextStep").show();
-                $("#startStatus").show();
-                $("#endStatus").show();
-            },
-            // 继续
-            continueSort:function(){
-
-                vm.pause=0;
-                vm.autoStepSort();
-                //隐藏按钮显示继续
-                $("#pauseSort").show();
-                $("#continueSort").hide();
-
-                //显示上一步下一步按钮
-                $("#lastStep").show();
-                $("#nextStep").show();
-                $("#startStatus").show();
-                $("#endStatus").show();
             },
 
 

@@ -6,9 +6,7 @@ import com.sy.sprite.util.SortUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @description 快速排序算法实现
@@ -18,14 +16,17 @@ import java.util.Map;
 @Service("quickSortService")
 public class QuickSortServiceImpl implements IQuickSortService {
 
-    //步骤
-    private static Integer step = 0;
+    //步骤-全
+    private static Integer allStep = 0;
+    //步骤-真实的交换，去除不交换的步骤
+    private static Integer realStep = 0;
 
     /**
      * 快速排序算法：
      * 1. 先从数列中取出一个数作为基准数（一般取数组的第一个元素）
-     * 2. 将比这个数大的数全放到它的右边，小于或等于它的数全放到它的左边。
-     * 3. 再对左右区间重复第二步，直到各区间只有一个数。
+     * 2. 取数组最低位和最高位分别为左右游标，左右同时扫描，找到左边>基准的数与右边<基准的数据交换
+     * 3. 当右游标<=左游标，即扫描一遍后，将基准数与右游标<基准的数交换，此时基准数左边的数都小于基准数。基准数下标右移一位。
+     * 4. 再对左右区间重复第二步，直到各区间只有一个数。
      * @param
      * @throws Exception
      */
@@ -34,6 +35,9 @@ public class QuickSortServiceImpl implements IQuickSortService {
 
         //将数组随机打乱
         //StdRandom.shuffle(arrays);
+
+        allStep = 0;
+        realStep = 0;
 
         List<QuickSortResult> resultList  = new ArrayList<>();
 
@@ -94,43 +98,49 @@ public class QuickSortServiceImpl implements IQuickSortService {
                 //比较数从左向右
                 ++var3;
 
-            } while(SortUtil.less(arrays[var3], var5) && var3 != var2);//从左向右扫描，碰到第一个大于基准的数跳出循环，全扫描一遍没有也跳出循环
+            } while(SortUtil.less(arrays[var3], var5) && var3 != var2);//从左向右扫描，碰到第一个大于等于基准的数跳出循环，全扫描一遍没有也跳出循环
 
             do {
                 //比较数从右向左
                 --var4;
-            } while(SortUtil.less(var5, arrays[var4]) && var4 != var1);//从右向左扫描，碰到第一个小于基准的数跳出循环，全扫描一遍没有也跳出循环
+            } while(SortUtil.less(var5, arrays[var4]) && var4 != var1);//从右向左扫描，碰到第一个小于等于基准的数跳出循环，全扫描一遍没有也跳出循环
 
-            //如果左边第一个大于基准的数的位置 大于 右边第一个小于基准的数的位置
+            //当左右所有的数都与基准数比较完后
             if (var3 >= var4) {
 
-                //封装排序结果
-                QuickSortResult result = getQuickSortResult(arrays,var5,var1,var4);
+                if(var1!=var4) {
+                    //封装交换前排序结果
+                    QuickSortResult result = getBeforeChangeQuickSortResult(arrays, var5, var1, var1, var4);
 
-                //将基准数与右边第一个小于基准的数交换位置
-                SortUtil.exch(arrays, var1, var4);
+                    //将基准数与右边最后一个小于基准的数交换位置
+                    SortUtil.exch(arrays, var1, var4);
 
-                //操作之后的数组
-                Comparable[] resultArrays = arrays.clone();
-                result.setAfterArrays(resultArrays);
-                resultList.add(result);
+                    //封装交换前排序后结果
+                    result = getAfterChangeQuickSortResult(result, arrays,var1,var2,var3,var4);
 
-                //打印数组
-                SortUtil.show(arrays);
+                    resultList.add(result);
+
+                    //打印数组
+                    SortUtil.show(arrays);
+                }
                 //返回基准数新的位置，此时基准左边都是小于基准的数，右边都是大于基准的数
                 return var4;
             }
 
-            //封装排序结果
-            QuickSortResult result = getQuickSortResult(arrays,var5,var3, var4);
+            if(var3!=var4){
 
-            //将左边大于基准和右边小于基准的数交换位置，然后继续扫描左右
-            SortUtil.exch(arrays, var3, var4);
+                //封装交换排序前排序结果
+                QuickSortResult result = getBeforeChangeQuickSortResult(arrays,var5,var1,var3, var4);
 
-            //操作之后的数组
-            Comparable[] resultArrays = arrays.clone();
-            result.setAfterArrays(resultArrays);
-            resultList.add(result);
+                //将左边大于基准和右边小于基准的数交换位置，然后继续扫描左右
+                SortUtil.exch(arrays, var3, var4);
+
+                //封装交换后排序结果
+                result = getAfterChangeQuickSortResult(result,arrays, var1, var2,var3,var4);
+
+                resultList.add(result);
+            }
+
 
             //打印数组
             SortUtil.show(arrays);
@@ -145,7 +155,7 @@ public class QuickSortServiceImpl implements IQuickSortService {
      * @param var4
      * @return
      */
-    private static QuickSortResult getQuickSortResult(Comparable[] arrays, Comparable var5, int var1, int var4) {
+    private static QuickSortResult getBeforeChangeQuickSortResult(Comparable[] arrays, Comparable var5, int var0,int var1, int var4) {
 
         //拷贝数组
         Comparable[] resultArrays = arrays.clone();
@@ -153,22 +163,63 @@ public class QuickSortServiceImpl implements IQuickSortService {
         QuickSortResult result = new QuickSortResult();
         //操作之前的数组
         result.setBeforeArrays(resultArrays);
-        //步骤
-        step = step+1;
-        result.setStep(step);
+
         //基准数
         result.setKeyNum(var5);
+        result.setKeyNumIndex(var0);
+        //比较数1
+        result.setCompareNum1Index(var1);
+        result.setCompareNum1(resultArrays[var1]);
+        //比较数2
+        result.setCompareNum2Index(var4);
+        result.setCompareNum2(resultArrays[var4]);
+        //比较规则
+        result.setCompareRule("asc");
         //交换数1
-        Map exchange1 = new HashMap<>();
-        exchange1.put(var1,resultArrays[var1]);
-        result.setExchangeNum1(exchange1);
+        result.setExchangeNum1Index(var1);
+        result.setExchangeNum1(resultArrays[var1]);
         //交换数2
-        Map exchange2 = new HashMap<>();
-        exchange2.put(var4,resultArrays[var4]);
-        result.setExchangeNum2(exchange2);
+        result.setExchangeNum2Index(var4);
+        result.setExchangeNum2(resultArrays[var4]);
+        //是否交换
+        result.setIsChanged("1");
+
         return result;
     }
 
+    /**
+     * 封装排序结果
+     * @param var5
+     * @param var4
+     * @param arrays
+     * @param var1
+     * @param var2
+     * @return
+     */
+    private static QuickSortResult getAfterChangeQuickSortResult(QuickSortResult result, Comparable[] arrays, int var1, int var2,int leftIndex,int rightIndex) {
+
+        //拷贝数组
+        Comparable[] resultArrays = arrays.clone();
+        // 排序后的数组
+        result.setAfterArrays(resultArrays);
+        //组内开始下标
+        result.setStartNumIndex(var1);
+        //组内截止下标
+        result.setEndNumIndex(var2);
+        //左游标
+        result.setLeftIndex(leftIndex);
+        //右游标
+        result.setRightIndex(rightIndex);
+
+        //排序步骤-全
+        allStep = allStep+1;
+        result.setAllStep(allStep);
+        //实际排序步骤
+        realStep = realStep+1;
+        result.setRealStep(realStep);
+
+        return result;
+    }
 //    public static void main(String[] args) {
 //
 //
@@ -176,5 +227,6 @@ public class QuickSortServiceImpl implements IQuickSortService {
 //        sort(new ArrayList<>(),arrays, 0, arrays.length - 1);
 //        SortUtil.show(arrays);
 //    }
+
 
 }
