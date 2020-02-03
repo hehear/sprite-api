@@ -18,8 +18,10 @@ import java.util.Map;
 @Service("quick3WaySortService")
 public class Quick3WaySortServiceImpl implements IQuick3WaySortService {
 
-    //排序步骤
-    private static Integer step = 0;
+    //步骤-全
+    private static Integer allStep = 0;
+    //步骤-真实的交换，去除不交换的步骤
+    private static Integer realStep = 0;
 
     /**
      * 三向切分快速排序算法：
@@ -77,13 +79,14 @@ public class Quick3WaySortServiceImpl implements IQuick3WaySortService {
             if(cmp < 0){
 
                 //封装排序前数据
-                Quick3WaySortResult result = getBeforeQuick3WaySortResult(arrays);
+                Quick3WaySortResult result = getBeforeQuick3WaySortResult(arrays,left,right,pointer,keyNum,low,left,pointer);
 
                 //小于基准数的放在left的左边，因此指针left和指针i整体右移
                 SortUtil.exch(arrays, left++, pointer++);
 
                 //封装排序后数据
-                result = getAfterQuick3WaySortResult(result,arrays,left,right,pointer,keyNum,left-1,pointer-1);
+                result = getAfterQuick3WaySortResult(result,arrays,left,right,pointer,low,high);
+
                 //封装一次操作的排序结果
                 resultList.add(result);
 
@@ -92,13 +95,13 @@ public class Quick3WaySortServiceImpl implements IQuick3WaySortService {
             } else if (cmp > 0) {
 
                 //封装排序前数据
-                Quick3WaySortResult result = getBeforeQuick3WaySortResult(arrays);
+                Quick3WaySortResult result = getBeforeQuick3WaySortResult(arrays,left,right,pointer,keyNum,low,right,pointer);
 
                 //大于基准数的放在right右边，因此指针right需要左移
                 SortUtil.exch(arrays, pointer, right--);
 
                 //封装排序后数据
-                result = getAfterQuick3WaySortResult(result,arrays,left,right,pointer,keyNum,pointer,right+1);
+                result = getAfterQuick3WaySortResult(result,arrays,left,right,pointer,low,high);
                 //封装一次操作的排序结果
                 resultList.add(result);
 
@@ -109,7 +112,7 @@ public class Quick3WaySortServiceImpl implements IQuick3WaySortService {
                 pointer++;
 
                 //封装数据
-                Quick3WaySortResult result = getNoneChangeQuick3WaySortResult(arrays,left,right,pointer,keyNum,pointer);
+                Quick3WaySortResult result = getNoneChangeQuick3WaySortResult(arrays,left,right,pointer,low,high);
                 //封装一次操作的排序结果
                 resultList.add(result);
             }
@@ -129,31 +132,25 @@ public class Quick3WaySortServiceImpl implements IQuick3WaySortService {
      * @param pointer
      * @return
      */
-    private static Quick3WaySortResult getAfterQuick3WaySortResult(Quick3WaySortResult result, Comparable[] arrays, int left,int right, int pointer,Comparable keyNum,int change1,int change2) {
+    private static Quick3WaySortResult getAfterQuick3WaySortResult(Quick3WaySortResult result, Comparable[] arrays, int left,int right, int pointer,int low,int high) {
 
         //数组拷贝
         Comparable[] resultArrays = arrays.clone();
-        //交换数1
-        Map changeMap1 = new HashMap();
-        changeMap1.put(change1,arrays[change1]);
-        result.setExchangeNum1(changeMap1);
-        //交换数2
-        Map changeMap2 = new HashMap();
-        changeMap2.put(change1,arrays[change1]);
-        result.setExchangeNum2(changeMap2);
-        //基准数
-        result.setKeyNum(keyNum);
-        //游标指针
-        result.setPointer(pointer);
-        //左游标
-        result.setLeft(left);
-        //右游标
-        result.setRight(right);
-        //步骤+1
-        step = step+1;
-        result.setStep(step);
-        //交换后的数组
+
+        //排序后的数组
         result.setAfterArrays(resultArrays);
+        //组内开始下标
+        result.setStartNumIndex(low);
+        //组内截止下标
+        result.setEndNumIndex(high);
+
+
+        //排序步骤-全
+        allStep = allStep+1;
+        result.setAllStep(allStep);
+        //实际排序步骤
+        realStep = realStep+1;
+        result.setRealStep(realStep);
 
         return result;
     }
@@ -163,7 +160,7 @@ public class Quick3WaySortServiceImpl implements IQuick3WaySortService {
      * @param arrays
      * @return
      */
-    private static Quick3WaySortResult getBeforeQuick3WaySortResult(Comparable[] arrays) {
+    private static Quick3WaySortResult getBeforeQuick3WaySortResult(Comparable[] arrays, int left,int right, int pointer,Comparable keyNum,int keyNumIndex, int change1,int change2) {
 
         Quick3WaySortResult result = new Quick3WaySortResult();
         //数组拷贝
@@ -171,11 +168,38 @@ public class Quick3WaySortServiceImpl implements IQuick3WaySortService {
         //交换前数组
         result.setBeforeArrays(resultArrays);
 
+        //基准数
+        result.setKeyNum(keyNum);
+        result.setKeyNumIndex(keyNumIndex);
+        //游标指针
+        result.setPointer(pointer);
+        //左游标
+        result.setLeftIndex(left);
+        //右游标
+        result.setRightIndex(right);
+
+        //比较数1
+        result.setCompareNum1Index(pointer);
+        result.setCompareNum1(resultArrays[pointer]);
+        //比较数2
+        result.setCompareNum2Index(keyNumIndex);
+        result.setCompareNum2(keyNum);
+        //比较规则
+        result.setCompareRule("asc");
+        //交换数1
+        result.setExchangeNum1Index(change1);
+        result.setExchangeNum1(resultArrays[change1]);
+        //交换数2
+        result.setExchangeNum2Index(change2);
+        result.setExchangeNum2(resultArrays[change2]);
+        //是否交换
+        result.setIsChanged("1");
+
         return result;
     }
 
     /**
-     * 封装交换前数据
+     * 封装未交换数据
      * @param arrays
      * @param left
      * @param right
@@ -184,26 +208,40 @@ public class Quick3WaySortServiceImpl implements IQuick3WaySortService {
      * @param i
      * @return
      */
-    private static Quick3WaySortResult getNoneChangeQuick3WaySortResult(Comparable[] arrays, int left, int right, int pointer, Comparable keyNum, int i) {
+    private static Quick3WaySortResult getNoneChangeQuick3WaySortResult(Comparable[] arrays, int left, int right, int pointer,int low,int high) {
 
         Quick3WaySortResult result = new Quick3WaySortResult();
         //数组拷贝
         Comparable[] resultArrays = arrays.clone();
         //交换前数组
         result.setBeforeArrays(resultArrays);
-        //交换后
+        //排序后的数组
         result.setAfterArrays(resultArrays);
+
         //基准数
-        result.setKeyNum(keyNum);
+        result.setKeyNum(resultArrays[low]);
+        result.setKeyNumIndex(low);
         //游标指针
         result.setPointer(pointer);
+        //排序后的数组
+        result.setAfterArrays(resultArrays);
+        //组内开始下标
+        result.setStartNumIndex(low);
+        //组内截止下标
+        result.setEndNumIndex(high);
         //左游标
-        result.setLeft(left);
+        result.setLeftIndex(left);
         //右游标
-        result.setRight(right);
-        //步骤+1
-        step = step+1;
-        result.setStep(step);
+        result.setRightIndex(right);
+
+        //排序步骤-全
+        allStep = allStep+1;
+        result.setAllStep(allStep);
+        //实际排序步骤
+        result.setRealStep(realStep);
+
+        //是否交换
+        result.setIsChanged("0");
 
         return result;
     }

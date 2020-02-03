@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/spritejs.min.js"></script>
-    <script src="/js/sprite_quick3waysort.js"></script>
+    <script src="/js/sprite_quicksort.js"></script>
     <script src="/js/vue.js"></script>
 
 
@@ -897,7 +897,7 @@
                 //请求后台获取算法执行步骤信息
                 $.ajax({
                     //url: 'http://sprite.hehear.com/sprite/sort/bubble',
-                    url:'http://localhost:8080/sprite/sort/quick3Way',
+                    url:'http://localhost:8080/sprite/sort/quick',
                     type: 'post',
                     headers:{'Content-Type': 'application/json'},
                     data: JSON.stringify(vm.arr),
@@ -942,7 +942,7 @@
                 //请求后台获取算法执行步骤信息
                 $.ajax({
                     //url: 'http://sprite.hehear.com/sprite/sort/bubble',
-                    url:'http://localhost:8080/sprite/sort/quick3Way',
+                    url:'http://localhost:8080/sprite/sort/quick',
                     type: 'post',
                     headers:{'Content-Type': 'application/json'},
                     data: JSON.stringify(vm.arr),
