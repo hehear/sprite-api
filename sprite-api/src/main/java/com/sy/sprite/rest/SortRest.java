@@ -5,6 +5,7 @@ import com.sy.sprite.common.SimpleMessage;
 import com.sy.sprite.model.BubbleSortResult;
 import com.sy.sprite.model.Quick3WaySortResult;
 import com.sy.sprite.model.QuickSortResult;
+import com.sy.sprite.model.SelectionSortResult;
 import com.sy.sprite.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -200,17 +201,17 @@ public class SortRest extends CommonRest{
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value="选择排序算法", notes="选择排序算法Rest方法")
     @ApiResponse(code = 200,message = "成功",response = SimpleMessage.class)
-    public SimpleMessage<List<QuickSortResult>> selectionSort(Integer[] arrays ){
+    public SimpleMessage<List<SelectionSortResult>> selectionSort(Integer[] arrays ){
 
-        SimpleMessage<List<QuickSortResult>> sortResultSimpleMessage = null;
+        SimpleMessage<List<SelectionSortResult>> sortResultSimpleMessage = null;
         try {
 
             LOGGER.info("执行选择排序算法。。");
             //TODO 只有排序算法代码，未解析注释，待设计model封装排序结果
 
-            List<QuickSortResult> resultList = selectionSortService.sort(arrays);
+            List<SelectionSortResult> resultList = selectionSortService.sort(arrays);
 
-            sortResultSimpleMessage = new SimpleMessage<List<QuickSortResult>>();
+            sortResultSimpleMessage = new SimpleMessage<List<SelectionSortResult>>();
 
             sortResultSimpleMessage.setRecord(resultList);
 

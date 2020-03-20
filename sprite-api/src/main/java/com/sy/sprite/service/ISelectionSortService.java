@@ -1,6 +1,7 @@
 package com.sy.sprite.service;
 
 import com.sy.sprite.model.QuickSortResult;
+import com.sy.sprite.model.SelectionSortResult;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface ISelectionSortService {
      * 选择排序算法
      * @throws Exception
      */
-    public List<QuickSortResult> sort(Comparable[] data) throws Exception;
+    public List<SelectionSortResult> sort(Comparable[] data) throws Exception;
 }
