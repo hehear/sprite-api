@@ -1,6 +1,6 @@
 package com.sy.sprite.service;
 
-import com.sy.sprite.model.QuickSortResult;
+import com.sy.sprite.model.InsertionSortResult;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ public interface IInsertionSortService {
      * 插入排序算法
      * @throws Exception
      */
-    public List<QuickSortResult> sort(Comparable[] data) throws Exception;
+    public List<InsertionSortResult> sort(Comparable[] data) throws Exception;
 }

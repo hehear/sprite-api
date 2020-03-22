@@ -1,13 +1,11 @@
 package com.sy.sprite.service.impl;
 
-import com.sy.sprite.model.QuickSortResult;
+import com.sy.sprite.model.InsertionSortResult;
 import com.sy.sprite.service.IInsertionSortService;
-import com.sy.sprite.service.IMergeSortService;
 import com.sy.sprite.util.SortUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -18,8 +16,10 @@ import java.util.List;
 @Service("insertionSortService")
 public class InsertionSortServiceImpl implements IInsertionSortService {
 
-    //步骤
-    private static Integer step = 0;
+    //步骤-全
+    private static Integer allStep = 0;
+    //步骤-真实的交换，去除不交换的步骤
+    private static Integer realStep = 0;
 
     /**
      * 插入排序算法：
@@ -30,13 +30,12 @@ public class InsertionSortServiceImpl implements IInsertionSortService {
      * @throws Exception
      */
     @Override
-    public List<QuickSortResult> sort(Comparable[] arrays) throws Exception {
+    public List<InsertionSortResult> sort(Comparable[] arrays) throws Exception {
 
         //将数组随机打乱
         //StdRandom.shuffle(arrays);
 
-        List<QuickSortResult> resultList  = new ArrayList<>();
-        //TODO 只有排序算法代码，未解析注释，待设计model封装排序结果
+        List<InsertionSortResult> resultList  = new ArrayList<>();
         //打印数组
         SortUtil.show(arrays);
 
@@ -48,11 +47,29 @@ public class InsertionSortServiceImpl implements IInsertionSortService {
             for (int j = i+1; j > 0; j--) {
                 //如果拿的元素与比较的元素小，则交换位置
                 if(SortUtil.less(arrays[j], arrays[j-1])) {
+
+                    // 交换前封装
+                    InsertionSortResult insertion = getBeforeBubbleSortResult(arrays,j,j-1,j);
+
+
                     //交换
                     SortUtil.exch(arrays, j, j - 1);
                     //打印数组
                     SortUtil.show(arrays);
+
+                    // 交换后封装
+                    insertion = getAfterBubbleSortResult(insertion,arrays);
+
+                    resultList.add(insertion);
+
+
                 }else{
+
+                    //未交换
+                    InsertionSortResult insertion = getNoChangeBubbleSortResult(arrays,j,j-1);
+
+                    resultList.add(insertion);
+
                     //由于前面的数组是有序的，在与比较元素相比大的话即已插入正确的位置，即可退出循环比较
                     break;
                 }
@@ -63,6 +80,111 @@ public class InsertionSortServiceImpl implements IInsertionSortService {
         assert SortUtil.isSorted(arrays);
 
         return resultList;
+
+    }
+
+    /**
+     * 封装不交换结果
+     * @param arrays
+     * @param i
+     * @param j
+     * @return
+     */
+    private InsertionSortResult getNoChangeBubbleSortResult(Comparable[] arrays, int i, int j) {
+
+        //拷贝数组
+        Comparable[] resultArrays = arrays.clone();
+
+        InsertionSortResult insertion = new InsertionSortResult();
+        //排序前的数组
+        insertion.setBeforeArrays(resultArrays);
+        //排序后
+        insertion.setAfterArrays(resultArrays);
+        //排序步骤-全，没交换排序步骤也+1
+        allStep = allStep+1;
+        insertion.setAllStep(allStep);
+        //实际排序步骤，没交换，真实排序步骤不加1
+        insertion.setRealStep(realStep);
+        //比较数1
+        insertion.setCompareNum1Index(j);
+        insertion.setCompareNum1(resultArrays[j]);
+        //比较数2
+        insertion.setCompareNum2Index(i);
+        insertion.setCompareNum2(resultArrays[i]);
+        //比较规则
+        insertion.setCompareRule("asc");
+        //是否交换
+        insertion.setIsChanged("0");
+        //插入数
+        insertion.setInsertIndex(i);
+        insertion.setInsertNum(resultArrays[i]);
+
+
+        return insertion;
+    }
+
+    /**
+     * 封装交换后结果
+     * @param selection
+     * @param arrays
+     * @return
+     */
+    private InsertionSortResult getAfterBubbleSortResult(InsertionSortResult selection, Comparable[] arrays) {
+
+        //拷贝数组
+        Comparable[] resultArrays = arrays.clone();
+
+        //交换后的数组
+        selection.setAfterArrays(resultArrays);
+
+        //排序步骤-全
+        allStep = allStep+1;
+        selection.setAllStep(allStep);
+        //实际排序步骤
+        realStep = realStep+1;
+        selection.setRealStep(realStep);
+
+        return selection;
+
+    }
+
+    /**
+     * 封装交换前结果
+     * @param arrays
+     * @param i
+     * @param insertIndex
+     * @return
+     */
+    private InsertionSortResult getBeforeBubbleSortResult(Comparable[] arrays, int i, int j, int insertIndex) {
+
+        //拷贝数组
+        Comparable[] resultArrays = arrays.clone();
+
+        InsertionSortResult insertion = new InsertionSortResult();
+        //排序前的数组
+        insertion.setBeforeArrays(resultArrays);
+        //比较数1
+        insertion.setCompareNum1Index(j);
+        insertion.setCompareNum1(resultArrays[j]);
+        //比较数2
+        insertion.setCompareNum2Index(i);
+        insertion.setCompareNum2(resultArrays[i]);
+        //比较规则
+        insertion.setCompareRule("asc");
+        //交换数1
+        insertion.setExchangeNum1Index(j);
+        insertion.setExchangeNum1(resultArrays[j]);
+        //交换数2
+        insertion.setExchangeNum2Index(i);
+        insertion.setExchangeNum2(resultArrays[i]);
+        //是否交换
+        insertion.setIsChanged("1");
+        //插入数
+        insertion.setInsertIndex(insertIndex);
+        insertion.setInsertNum(resultArrays[insertIndex]);
+
+
+        return insertion;
 
     }
 
